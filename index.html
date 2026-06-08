@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Precious Invitation | SPA Respiración</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
+  <style>
+    /* 爽やかなブルーを基調とした配色 */
+    :root { --primary-color: #2c5e7a; --accent-color: #5d9bb8; --bg-color: #f4f9fb; }
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { font-family: 'Noto Serif JP', serif; background-color: var(--bg-color); color: #231f20; margin: 0; padding: 50px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; justify-content: center; }
+    .header-container { text-align: center; margin-bottom: 40px; width: 100%; max-width: 460px; }
+    .header-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--primary-color); margin: 0 0 12px 0; letter-spacing: 4px; text-transform: uppercase; }
+    .header-subtitle { font-size: 13px; font-weight: 600; color: #2c5e7a; margin: 0; letter-spacing: 2px; }
+    .card { background: #ffffff; max-width: 460px; width: 100%; padding: 50px 35px; box-shadow: 0 20px 50px rgba(44, 94, 122, 0.1); position: relative; }
+    .card::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background-color: var(--accent-color); }
+    .instruction-box { font-size: 16px; line-height: 2.3; color: #231f20; text-align: center; margin-bottom: 40px; font-weight: 600; }
+    .highlight-name { color: var(--primary-color); font-weight: 900; }
+    .price-container { border-top: 1px solid #d0e1e9; border-bottom: 1px solid #d0e1e9; padding: 20px 5px; margin-bottom: 40px; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+    .price-value-featured { color: var(--primary-color); font-size: 24px; font-weight: 900; font-family: 'Cormorant Garamond', serif; }
+    input[type="text"] { width: 100%; padding: 14px 0; border: none; border-bottom: 1.5px solid var(--primary-color); font-size: 18px; background: transparent; }
+    button { width: 100%; padding: 20px; background: var(--primary-color); color: #ffffff; border: none; font-size: 16px; font-weight: 900; cursor: pointer; letter-spacing: 2px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 94, 122, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: #ffffff; padding: 45px 30px; max-width: 400px; width: 85%; text-align: center; }
+    .modal-button { display: block; background: var(--primary-color); color: #ffffff; text-decoration: none; padding: 18px; font-weight: 900; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="header-container">
+  <div class="header-title">Precious Invitation</div>
+  <div class="header-subtitle">SPA Respiración / 大分別府</div>
+</div>
+
+<div class="card">
+  <div class="instruction-box">
+    <span id="referrer_name" class="highlight-name">◯◯様</span>より、<br>
+    Precious Invitationでのご招待<br>
+    <br>
+    2名様でご予約を頂きますと、<br>
+    1名様分(¥33,000)を無料でご招待させていただきます💌
+  </div>
+
+  <div class="price-container">
+    <div class="price-row">
+      <div style="color: #8c857f;">通常価格</div>
+      <div style="color: #8c857f; text-decoration: line-through;">66,000 円</div>
+    </div>
+    <div class="price-row">
+      <div style="font-weight: 900;">特別限定ペア招待（1名分無料）</div>
+      <div class="price-value-featured" id="display_price">33,000 円</div>
+    </div>
+  </div>
+
+  <form id="inviteForm">
+    <input type="text" id="guestName" placeholder="お名前（フルネーム）" required>
+    <button type="submit" style="margin-top: 30px;">Invitationを受取る</button>
+  </form>
+</div>
+
+<div id="beautyModal" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <div style="font-size: 24px; color: var(--primary-color); margin-bottom: 20px;">Invitation Ready</div>
+    <div style="margin-bottom: 25px; font-weight: 600;">チャット欄に文字が自動入力されますので<br><strong>【 そのまま送信 】</strong>してください。</div>
+    <a id="lineLinkBtn" class="modal-button" target="_blank">公式LINEを開く</a>
+  </div>
+</div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const referrerName = urlParams.get('ref_name') || '';
+  if (referrerName) { document.getElementById('referrer_name').innerText = referrerName + " 様"; }
+
+  document.getElementById('inviteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const guestName = document.getElementById('guestName').value;
+    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation ｜ " + guestName + " 様");
+    document.getElementById('lineLinkBtn').href = finalLineUrl;
+    document.getElementById('beautyModal').style.display = 'flex';
+  });
+</script>
+</body>
+</html>

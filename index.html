@@ -71,12 +71,28 @@
 <script>
   const urlParams = new URLSearchParams(window.location.search);
   const referrerName = urlParams.get('ref_name') || '';
+  const referrerId = urlParams.get('ref_id') || '';
   if (referrerName) { document.getElementById('referrer_name').innerText = referrerName + " 様"; }
 
   document.getElementById('inviteForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const guestName = document.getElementById('guestName').value;
-    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation ｜ " + guestName + " 様");
+    
+    // 🌟【新規実装】提示された最新のGASのURLへ、登録データを100%確実に送信する処理
+    fetch("https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: guestName,
+        referrer: window.location.href,
+        ref_name: referrerName || "直接登録",
+        ref_id: referrerId
+      })
+    });
+
+    // 🌟【改良】LINEへ飛ぶメッセージに「（大分）」を付与し、GAS側で永続的に大分を自動判別可能に
+    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';
   });

@@ -91,7 +91,7 @@
       })
     });
 
-    // 🌟【改良】LINEへ飛ぶメッセージに「（大分）」を付与し、GAS側で永続的に大分を自動判別可能に
+    // 🌟【改良】LINEへ飛ぶメッセージに「（大分）」を確実に付与
     const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';

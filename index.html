@@ -78,21 +78,10 @@
     e.preventDefault();
     const guestName = document.getElementById('guestName').value;
     
-    // 🌟【新規実装】提示された最新のGASのURLへ、登録データを100%確実に送信する処理
-    fetch("https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: guestName,
-        referrer: window.location.href,
-        ref_name: referrerName || "直接登録",
-        ref_id: referrerId
-      })
-    });
-
-    // 🌟【改良】LINEへ飛ぶメッセージに「（大分）」を確実に付与
-    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
+    // 🌟紹介元の情報をLINEメッセージに相乗りさせます（お客様には見えないように後ろに隠します）
+    const msg = "Precious Invitation（大分） ｜ " + guestName + " 様 【紹介元:" + (referrerName || "直接登録") + ":" + (referrerId || "") + "】";
+    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent(msg);
+    
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';
   });

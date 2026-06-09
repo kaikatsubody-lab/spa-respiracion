@@ -6,7 +6,6 @@
   <title>Precious Invitation | SPA Respiración</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
   <style>
-    /* 爽やかなブルーを基調とした配色 */
     :root { --primary-color: #2c5e7a; --accent-color: #5d9bb8; --bg-color: #f4f9fb; }
     html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { font-family: 'Noto Serif JP', serif; background-color: var(--bg-color); color: #231f20; margin: 0; padding: 50px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; justify-content: center; }
@@ -78,7 +77,6 @@
     e.preventDefault();
     const guestName = document.getElementById('guestName').value;
     
-    // 🌟 セキュリティブロック（CORS）を完全に回避してGASへデータを先回りして100%届ける特殊フォーム形式
     const formData = new URLSearchParams();
     formData.append('name', guestName);
     formData.append('area', '大分');
@@ -91,8 +89,8 @@
       body: formData
     });
 
-    // 🌟 LINEへ飛ぶメッセージからは怪しい英数字も「text=」も1文字残らず排除し、完璧に美しく戻します
-    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
+    // 🌟【修正】?text=の記述ミスを完全修復！
+    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';
   });

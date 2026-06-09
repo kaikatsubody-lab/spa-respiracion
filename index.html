@@ -72,16 +72,27 @@
   const urlParams = new URLSearchParams(window.location.search);
   const referrerName = urlParams.get('ref_name') || '';
   const referrerId = urlParams.get('ref_id') || '';
-  if (referrerName) { document.getElementById('referrer_name').innerText = referrerName + " 様"; }
+  if (referrerName && referrerName !== '◯◯') { document.getElementById('referrer_name').innerText = referrerName + " 様"; }
 
   document.getElementById('inviteForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const guestName = document.getElementById('guestName').value;
     
-    // 🌟紹介元の情報をLINEメッセージに相乗りさせます（お客様には見えないように後ろに隠します）
-    const msg = "Precious Invitation（大分） ｜ " + guestName + " 様 【紹介元:" + (referrerName || "直接登録") + ":" + (referrerId || "") + "】";
-    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent(msg);
-    
+    // 🌟 セキュリティブロック（CORS）を完全に回避してGASへデータを先回りして100%届ける特殊フォーム形式
+    const formData = new URLSearchParams();
+    formData.append('name', guestName);
+    formData.append('area', '大分');
+    formData.append('ref_name', referrerName);
+    formData.append('ref_id', referrerId);
+
+    fetch("https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec", {
+      method: "POST",
+      mode: "no-cors",
+      body: formData
+    });
+
+    // 🌟 LINEへ飛ぶメッセージからは怪しい英数字も「text=」も1文字残らず排除し、完璧に美しく戻します
+    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';
   });

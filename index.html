@@ -6,6 +6,7 @@
   <title>Precious Invitation | SPA Respiración</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
   <style>
+    /* 大分サロン（Respiración）の美しい海のブルーを完全維持 */
     :root { --primary-color: #2c5e7a; --accent-color: #5d9bb8; --bg-color: #f4f9fb; }
     html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { font-family: 'Noto Serif JP', serif; background-color: var(--bg-color); color: #231f20; margin: 0; padding: 50px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; justify-content: center; }
@@ -62,8 +63,8 @@
 <div id="beautyModal" class="modal-overlay" style="display:none;">
   <div class="modal-content">
     <div style="font-size: 24px; color: var(--primary-color); margin-bottom: 20px;">Invitation Ready</div>
-    <div style="margin-bottom: 25px; font-weight: 600;">チャット欄に文字が自動入力されますので<br><strong>【 そのまま送信 】</strong>してください。</div>
-    <a id="lineLinkBtn" class="modal-button" target="_blank">公式LINEを開く</a>
+    <div style="margin-bottom: 25px; font-weight: 600;">ご招待の仮受付が完了いたしました✨<br>下記のボタンより<strong>【大分サロン公式LINE】</strong>に登録し、そのままメッセージを送信してください。</div>
+    <a id="lineLinkBtn" class="modal-button" target="_blank">大分サロン 公式LINEを開く</a>
   </div>
 </div>
 
@@ -89,8 +90,8 @@
       body: formData
     });
 
-    // 🌟【修正】?text=の記述ミスを完全修復！
-    const finalLineUrl = "https://line.me/R/oaMessage/@676mslcl/?text=" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
+    // 🌟【大分公式LINE @gof2051l へ直接ジャンプ＆文字自動入力】
+    const finalLineUrl = "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent("Precious Invitation（大分） ｜ " + guestName + " 様");
     document.getElementById('lineLinkBtn').href = finalLineUrl;
     document.getElementById('beautyModal').style.display = 'flex';
   });

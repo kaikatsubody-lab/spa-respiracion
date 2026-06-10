@@ -150,18 +150,17 @@
 </div>
 
 <script>
-  // 🌟 NG日（グレーアウトする日付）の設定
-  const NG_DATES = [
-    "2026-06-15", 
-    "2026-06-20"
-  ];
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec";
 
-  flatpickr(".date-input", {
-    locale: "ja",
-    minDate: "today",
-    disable: NG_DATES,
-    dateFormat: "Y-m-d"
-  });
+  // 🌟 予約可能日（OK日）だけをカレンダーで選べるようにする
+  fetch(webAppUrl + "?action=get_ok_dates")
+    .then(response => response.json())
+    .then(data => {
+      flatpickr(".date-input", {
+        locale: "ja", minDate: "today", dateFormat: "Y-m-d",
+        enable: data.oita // 🌟 ここを enable に変更しました！
+      });
+    }).catch(() => { flatpickr(".date-input", { locale: "ja", minDate: "today", dateFormat: "Y-m-d", enable: [] }); });
 
   const timeOptions = ['<option value="">時間を選択</option>'];
   for (let h = 10; h <= 17; h++) {
@@ -180,7 +179,6 @@
 
   document.getElementById('resForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
     const clothesNodes = document.querySelectorAll('input[name="clothes"]:checked');
     const clothes = Array.from(clothesNodes).map(n => n.value).join('・') || '未選択';
     if(clothes === '未選択') { alert('お着替えのタイプを選択してください。'); return; }
@@ -190,8 +188,6 @@
     const tel = document.getElementById('resTel').value;
     const count = document.getElementById('resCount').value;
     const menu = document.getElementById('resMenu').value;
-    
-    // シート記録用に裏で「大分サロン」として送信
     const area = "大分サロン（SPA Respiración）";
 
     const d1 = document.getElementById('date1').value, t1 = document.getElementById('time1').value;
@@ -217,13 +213,10 @@
     formData.append('dt3', dt3);
     formData.append('msg', msg);
 
-    fetch("https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec", {
-      method: "POST", mode: "no-cors", body: formData
-    }).then(() => {
-      // 🌟 【本番用LINEリンク】日時➔お客様情報 の見やすい並びに変更しました
-      // const lineMsg = `予約リクエスト ｜ ${name}様\n\n【第一希望】${dt1}\n【第二希望】${dt2}\n【第三希望】${dt3}\n\n【対象メニュー】${menu}\n【お名前】${name}（${kana}）\n【お電話】${tel}\n【ご利用人数】${count}\n【お着替え】${clothes}\n\n【メッセージ・ご要望】\n${msg}\n\n⚠️ 【重要】予約はまだ確定しておりません。\n内容を確認後、改めてサロンスタッフより「ご予約確定」または「日時のご調整」のご連絡をさせていただきます。`;
-      // "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent(lineMsg);
-      document.getElementById('beautyModal').style.display = 'flex';
+    fetch(webAppUrl, { method: "POST", mode: "no-cors", body: formData })
+    .then(() => {
+      const lineMsg = `予約リクエスト ｜ ${name}様\n\n【第一希望】${dt1}\n【第二希望】${dt2}\n【第三希望】${dt3}\n\n【対象メニュー】${menu}\n【お名前】${name}（${kana}）\n【お電話】${tel}\n【ご利用人数】${count}\n【お着替え】${clothes}\n\n【メッセージ・ご要望】\n${msg}\n\n⚠️ 【重要】予約はまだ確定しておりません。\n内容を確認後、改めてサロンスタッフより「ご予約確定」または「日時のご調整」のご連絡をさせていただきます。`;
+      window.location.href = "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent(lineMsg);
     });
   });
 </script>

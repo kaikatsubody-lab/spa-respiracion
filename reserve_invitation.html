@@ -3,28 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Precious Invitation 専用予約リクエストフォーム</title>
+  <title>Precious Invitation 専用予約リクエスト</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
   <style>
     :root { --primary-color: #2c5e7a; --accent-color: #5d9bb8; --bg-color: #f4f9fb; }
     body { font-family: 'Noto Serif JP', serif; background-color: var(--bg-color); color: #231f20; margin: 0; padding: 40px 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
     .header-container { text-align: center; margin-bottom: 30px; width: 100%; max-width: 480px; }
     .header-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--primary-color); margin: 0 0 10px 0; letter-spacing: 3px; text-transform: uppercase; }
     .header-subtitle { font-size: 13px; font-weight: 600; color: var(--accent-color); margin: 0; letter-spacing: 2px; }
-    .card { background: #ffffff; max-width: 480px; width: 100%; padding: 40px 25px; box-shadow: 0 20px 50px rgba(44, 94, 122, 0.08); box-sizing: border-box; position: relative; }
+    .card { background: #ffffff; max-width: 480px; width: 100%; padding: 30px 20px; box-shadow: 0 15px 40px rgba(44, 94, 122, 0.08); box-sizing: border-box; position: relative; margin-bottom: 20px;}
     .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); }
-    .lead-text { font-size: 14px; line-height: 2; color: #555; text-align: center; margin-bottom: 30px; font-weight: 600; }
+    .lead-text { font-size: 14px; line-height: 2; color: #555; text-align: center; margin-bottom: 25px; font-weight: 600; border-bottom: 1px solid #eee; padding-bottom: 20px;}
+    .card-title { font-size: 16px; font-weight: 900; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center;}
+    .card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--primary-color); margin-right: 8px; }
     .form-group { margin-bottom: 25px; }
     .form-group label { display: block; font-size: 13px; font-weight: 900; color: var(--primary-color); margin-bottom: 8px; }
     .form-group label span { color: #c87a53; margin-left: 5px; font-size: 11px; }
-    input[type="text"], input[type="date"], input[type="time"], textarea { 
+    input[type="text"], input[type="tel"], select, textarea { 
       width: 100%; padding: 14px; border: 1px solid #d0e1e9; font-size: 15px; font-weight: 600; background: #fbfdfe; box-sizing: border-box; font-family: 'Noto Serif JP', serif;
     }
-    input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--primary-color); background: #fff; }
-    textarea { height: 100px; resize: none; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-color); background: #fff; }
     .date-time-row { display: flex; gap: 10px; }
-    .date-time-row input[type="date"] { flex: 1.4; }
-    .date-time-row input[type="time"] { flex: 1; }
+    .date-time-row input[type="text"], .date-time-row select { flex: 1; }
+    
+    .checkbox-group { display: flex; gap: 20px; padding: 10px 0; }
+    .checkbox-group label { font-size: 15px; font-weight: 600; display: flex; align-items: center; cursor: pointer; color: #333;}
+    .checkbox-group input { margin-right: 8px; width: 18px; height: 18px; accent-color: var(--primary-color); }
+
+    textarea { height: 100px; resize: none; }
+    .policy-box { background: #f8f8f8; padding: 20px; font-size: 12px; color: #555; line-height: 1.8; border-left: 4px solid #999; margin-bottom: 30px;}
     button { width: 100%; padding: 20px; background: var(--primary-color); color: #ffffff; border: none; font-size: 16px; font-weight: 900; cursor: pointer; letter-spacing: 2px; }
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 94, 122, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
     .modal-content { background: #ffffff; padding: 45px 30px; max-width: 400px; width: 85%; text-align: center; border-top: 4px solid var(--primary-color); }
@@ -35,93 +46,170 @@
 
 <div class="header-container">
   <div class="header-title">Precious Invitation</div>
-  <div class="header-subtitle">大分サロン 専用予約リクエストフォーム</div>
+  <div class="header-subtitle">大分サロン 専用予約リクエスト</div>
 </div>
 
-<div class="card">
-  <div class="lead-text">
-    【大分サロン：SPA Respiración】<br>
-    特別ペア招待セッションのご希望日時を<br>
-    第三希望までご選択くださいませ✨
-  </div>
-
-  <form id="resForm">
-    <div class="form-group">
-      <label>お名前（フルネーム）<span>*必須</span></label>
-      <input type="text" id="resName" placeholder="お名前を入力してください" required>
+<form id="resForm" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+  
+  <!-- カード1：ご希望日時 -->
+  <div class="card">
+    <div class="lead-text">
+      【SPA Respiración】<br>
+      ご希望日時や詳細をご入力くださいませ✨
     </div>
-
-    <div class="form-group">
-      <label>対象メニュー</label>
-      <input type="text" id="resMenu" value="Precious Invitation 特別ペア招待セッション" readonly style="background:#f4f7f9; color:#777; cursor:not-allowed;">
-    </div>
+    <div class="card-title">ご希望日時</div>
 
     <div class="form-group">
       <label>第一希望日時<span>*必須</span></label>
       <div class="date-time-row">
-        <input type="date" id="date1" required>
-        <input type="time" id="time1" required>
+        <input type="text" id="date1" class="date-input" placeholder="日付を選択" required readonly>
+        <select id="time1" class="time-select" required></select>
       </div>
     </div>
-
     <div class="form-group">
       <label>第二希望日時<span>*必須</span></label>
       <div class="date-time-row">
-        <input type="date" id="date2" required>
-        <input type="time" id="time2" required>
+        <input type="text" id="date2" class="date-input" placeholder="日付を選択" required readonly>
+        <select id="time2" class="time-select" required></select>
       </div>
     </div>
-
     <div class="form-group">
       <label>第三希望日時<span>*任意</span></label>
       <div class="date-time-row">
-        <input type="date" id="date3">
-        <input type="time" id="time3">
+        <input type="text" id="date3" class="date-input" placeholder="日付を選択" readonly>
+        <select id="time3" class="time-select"></select>
       </div>
     </div>
+  </div>
+
+  <!-- カード2：お客様情報 -->
+  <div class="card">
+    <div class="card-title">お客様情報</div>
 
     <div class="form-group">
-      <label>サロンへのメッセージ・ご要望<span>*任意</span></label>
+      <label>お名前（フルネーム）<span>*必須</span></label>
+      <input type="text" id="resName" placeholder="山田 花子" required>
+    </div>
+    <div class="form-group">
+      <label>ふりがな<span>*必須</span></label>
+      <input type="text" id="resKana" placeholder="やまだ はなこ" required>
+    </div>
+    <div class="form-group">
+      <label>お電話番号<span>*必須</span></label>
+      <input type="tel" id="resTel" placeholder="090-0000-0000" required>
+    </div>
+    <div class="form-group">
+      <label>ご利用人数<span>*必須</span></label>
+      <select id="resCount" required>
+        <option value="1人">1人</option>
+        <option value="2人" selected>2人（ペア）</option>
+        <option value="3人">3人</option>
+        <option value="4人">4人</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>お着替えのタイプ（複数選択可）<span>*必須</span></label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="clothes" value="女性用" checked> 女性用</label>
+        <label><input type="checkbox" name="clothes" value="男性用"> 男性用</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>対象メニュー</label>
+      <input type="text" id="resMenu" value="Precious Invitation 特別ペア招待セッション" readonly style="background:#f4f7f9; color:#777; cursor:not-allowed;">
+    </div>
+  </div>
+
+  <!-- カード3：メッセージ -->
+  <div class="card">
+    <div class="card-title">メッセージ・ご要望</div>
+    <div class="form-group" style="margin-bottom:0;">
       <textarea id="resMessage" placeholder="ペアで来られる方のお名前や、ご質問などがあればご記入ください。"></textarea>
     </div>
+  </div>
 
-    <button type="submit">予約リクエストを送信する</button>
-  </form>
-</div>
+  <div class="card" style="box-shadow: none; border: 1px solid #eee;">
+    <div class="policy-box">
+      <strong>【キャンセルポリシー】</strong><br>
+      ◆ キャンセル、変更につきましては、ご予約日の3日前までにご連絡をお願いいたします。2日前のキャンセルについては50%、当日のキャンセルについては100%のキャンセル料をご請求させていただきます旨ご了承ください。変更等は、お早めにご連絡をお願いいたします。<br><br>
+      ◆ ご連絡のないまま、20分を経過してのご来店は、施術時間の短縮、またはお断りをさせていただく場合がございます。その場合も、施術料金の満額をご請求させていただきますので、ご了承ください。
+    </div>
+    <button type="submit">上記に同意してリクエストを送信</button>
+  </div>
+</form>
 
 <div id="beautyModal" class="modal-overlay" style="display:none;">
   <div class="modal-content">
     <div style="font-size: 22px; color: var(--primary-color); margin-bottom: 20px; font-weight:900;">【テスト送信成功】</div>
     <div style="margin-bottom: 25px; font-size:14px; line-height:1.8; font-weight: 600; color:#555;">
-      裏側でスプレッドシートへの記録が完了しました！<br>
-      現在はテストモードのため、スタッフに通知はいきません。<br>
-      シートに正しくデータが入っているかご確認ください。
+      シートに正しくデータが入っているかご確認ください。<br>
+      本番ではここからサロンLINEへ移動します。
     </div>
     <a id="lineLinkBtn" class="modal-button" href="https://www.google.com">テストを終了する（Googleへ）</a>
   </div>
 </div>
 
 <script>
+  // 🌟 NG日（グレーアウトする日付）の設定
+  const NG_DATES = [
+    "2026-06-15", 
+    "2026-06-20"
+  ];
+
+  flatpickr(".date-input", {
+    locale: "ja",
+    minDate: "today",
+    disable: NG_DATES,
+    dateFormat: "Y-m-d"
+  });
+
+  const timeOptions = ['<option value="">時間を選択</option>'];
+  for (let h = 10; h <= 17; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      if (h === 10 && m < 30) continue; 
+      if (h === 17 && m > 30) continue; 
+      let hh = String(h).padStart(2, '0');
+      let mm = String(m).padStart(2, '0');
+      timeOptions.push(`<option value="${hh}:${mm}">${hh}:${mm}</option>`);
+    }
+  }
+  document.querySelectorAll('.time-select').forEach(sel => sel.innerHTML = timeOptions.join(''));
+
   const urlParams = new URLSearchParams(window.location.search);
   const lineUid = urlParams.get('uid') || 'TEST_USER_OITA';
 
   document.getElementById('resForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const clothesNodes = document.querySelectorAll('input[name="clothes"]:checked');
+    const clothes = Array.from(clothesNodes).map(n => n.value).join('・') || '未選択';
+    if(clothes === '未選択') { alert('お着替えのタイプを選択してください。'); return; }
+
     const name = document.getElementById('resName').value;
+    const kana = document.getElementById('resKana').value;
+    const tel = document.getElementById('resTel').value;
+    const count = document.getElementById('resCount').value;
     const menu = document.getElementById('resMenu').value;
-    const area = "大分サロン（Respiración）";
-    const dt1 = document.getElementById('date1').value + ' ' + document.getElementById('time1').value;
-    const dt2 = document.getElementById('date2').value + ' ' + document.getElementById('time2').value;
-    const d3 = document.getElementById('date3').value;
-    const t3 = document.getElementById('time3').value;
-    const dt3 = (d3 && t3) ? (d3 + ' ' + t3) : 'なし';
+    
+    // シート記録用に裏で「大分サロン」として送信
+    const area = "大分サロン（SPA Respiración）";
+
+    const d1 = document.getElementById('date1').value, t1 = document.getElementById('time1').value;
+    const dt1 = (d1 && t1) ? `${d1} ${t1}` : "";
+    const d2 = document.getElementById('date2').value, t2 = document.getElementById('time2').value;
+    const dt2 = (d2 && t2) ? `${d2} ${t2}` : "";
+    const d3 = document.getElementById('date3').value, t3 = document.getElementById('time3').value;
+    const dt3 = (d3 && t3) ? `${d3} ${t3}` : "なし";
     const msg = document.getElementById('resMessage').value || '特になし';
 
     const formData = new URLSearchParams();
     formData.append('action', 'full_reservation_request');
     formData.append('uid', lineUid);
     formData.append('name', name);
+    formData.append('kana', kana);
+    formData.append('tel', tel);
+    formData.append('count', count);
+    formData.append('clothes', clothes);
     formData.append('area', area);
     formData.append('menu', menu);
     formData.append('dt1', dt1);
@@ -129,15 +217,12 @@
     formData.append('dt3', dt3);
     formData.append('msg', msg);
 
-    // 🌟 裏側でスプレッドシートへ送信
     fetch("https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec", {
-      method: "POST",
-      mode: "no-cors",
-      body: formData
+      method: "POST", mode: "no-cors", body: formData
     }).then(() => {
-      // 🌟 【本番切り替え用メモ】
-      // テスト完了後は、下の href の中身を以下に書き換えるだけでスタッフLINEへジャンプします
-      // "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent(`予約リクエストフォーム ｜ ${name}様\n\n【サロン】${area}\n【メニュー】${menu}\n【第一希望】${dt1}\n【第二希望】${dt2}\n【第三希望】${dt3}\n【メッセージ】${msg}`);
+      // 🌟 【本番用LINEリンク】日時➔お客様情報 の見やすい並びに変更しました
+      // const lineMsg = `予約リクエスト ｜ ${name}様\n\n【第一希望】${dt1}\n【第二希望】${dt2}\n【第三希望】${dt3}\n\n【対象メニュー】${menu}\n【お名前】${name}（${kana}）\n【お電話】${tel}\n【ご利用人数】${count}\n【お着替え】${clothes}\n\n【メッセージ・ご要望】\n${msg}\n\n⚠️ 【重要】予約はまだ確定しておりません。\n内容を確認後、改めてサロンスタッフより「ご予約確定」または「日時のご調整」のご連絡をさせていただきます。`;
+      // "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent(lineMsg);
       document.getElementById('beautyModal').style.display = 'flex';
     });
   });

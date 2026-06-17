@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>スタッフ専用 消込中継ページ</title>
+  <script>
+    // URLからお客様のLINEのIDを抜き取ります
+    const urlParams = new URLSearchParams(window.location.search);
+    const uid = urlParams.get('uid') || '';
+    // ドライブのアプリ横取りを100%回避し、ブラウザ上でGASのスタッフ画面へ安全にすり抜けて自動転送します
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyh-FXdvRjPkflNkhhsOnDsbeUsMxz3-DW5vMe7yoBm2JeQ62o5u5TTPVvEN0FTFZa7iQ/exec?page=staff&uid=" + uid;
+    window.location.href = gasUrl;
+  </script>
+</head>
+<body>
+  <p style="text-align:center; margin-top:60px; font-family:sans-serif; color:#666; font-size:14px;">
+    スタッフ消込画面へ安全に接続中...
+  </p>
+</body>
+</html>

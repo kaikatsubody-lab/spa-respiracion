@@ -51,7 +51,6 @@
 
 <form id="resForm" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
   
-  <!-- カード1：ご希望日時 -->
   <div class="card">
     <div class="lead-text">
       【SPA Respiración】<br>
@@ -82,7 +81,6 @@
     </div>
   </div>
 
-  <!-- カード2：お客様情報 -->
   <div class="card">
     <div class="card-title">お客様情報</div>
 
@@ -120,7 +118,6 @@
     </div>
   </div>
 
-  <!-- カード3：メッセージ -->
   <div class="card">
     <div class="card-title">メッセージ・ご要望</div>
     <div class="form-group" style="margin-bottom:0;">
@@ -150,15 +147,16 @@
 </div>
 
 <script>
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbwCFEoeGlvuEdH0Aj-qDly8FSRphx0sNHLMZmyYmJXs9hinQiqr4pBqmKw_s69VZNH30A/exec";
+  // 🌟 最新の本番用共通URL（...FTFZa7iQ）に更新しました
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbyh-FXdvRjPkflNkhhsOnDsbeUsMxz3-DW5vMe7yoBm2JeQ62o5u5TTPVvEN0FTFZa7iQ/exec";
 
-  // 🌟 予約可能日（OK日）だけをカレンダーで選べるようにする
-  fetch(webAppUrl + "?action=get_ok_dates")
+  // 🌟 パラメータに「&area=oita」を渡して、大分のカレンダー設定を直接読み込むように修正しました
+  fetch(webAppUrl + "?area=oita")
     .then(response => response.json())
     .then(data => {
       flatpickr(".date-input", {
         locale: "ja", minDate: "today", dateFormat: "Y-m-d",
-        enable: data.oita // 🌟 ここを enable に変更しました！
+        enable: data.oita // 大分の有効化日を適用
       });
     }).catch(() => { flatpickr(".date-input", { locale: "ja", minDate: "today", dateFormat: "Y-m-d", enable: [] }); });
 
@@ -188,7 +186,9 @@
     const tel = document.getElementById('resTel').value;
     const count = document.getElementById('resCount').value;
     const menu = document.getElementById('resMenu').value;
-    const area = "大分サロン（SPA Respiración）";
+    
+    // 🌟 GASの仕分けロジックに合わせて「area」に小文字の「oita」を完璧にセットします
+    const area = "oita";
 
     const d1 = document.getElementById('date1').value, t1 = document.getElementById('time1').value;
     const dt1 = (d1 && t1) ? `${d1} ${t1}` : "";

@@ -128,7 +128,7 @@
   <div class="card" style="box-shadow: none; border: 1px solid #eee;">
     <div class="policy-box">
       <strong>【キャンセルポリシー】</strong><br>
-      ◆ キャンセル、変更につきましては、ご予約日の3日前までにご連絡をお願いいたします。2日前のキャンセルについては50%、当日のキャンセルについては100%のキャンセル料をご請求させていただきます旨ご了承ください。変更等は, お早めにご連絡をお願いいたします。<br><br>
+      ◆ キャンセル、変更につきましては、ご予約日の3日前までにご連絡をお願いいたします。2日前のキャンセルについては50%、当日のキャンセルについては100%のキャンセル料をご請求させていただきます旨ご了承ください。変更等は、お早めにご連絡をお願いいたします。<br><br>
       ◆ ご連絡のないまま、20分を経過してのご来店は、施術時間の短縮、またはお断りをさせていただく場合がございます。その場合も、施術料金の満額をご請求させていただきますので、ご了承ください。
     </div>
     
@@ -219,8 +219,8 @@
 
     fetch(webAppUrl, { method: "POST", mode: "no-cors", body: formData })
     .then(() => {
-      const lineMsg = `予約リクエスト ｜ ${name}様\n\n【第一希望】${dt1}\n【第二希望】${dt2}\n【第三希望】${dt3}\n\n【対象メニュー】${menu}\n【お名前】${name}（${kana}）\n【お電話】${tel}\n【ご利用人数】${count}\n【お着替え】${clothes}\n\n【メッセージ・ご要望】\n${msg}\n\n⚠️ 【重要】予約はまだ確定しておりません。\n内容を確認後、改めてサロンスタッフより「ご予約確定」または「日時のご調整」のご連絡をさせていただきます。`;
-      window.location.href = "https://line.me/R/oaMessage/@gof2051l/?" + encodeURIComponent(lineMsg);
+      // 🌟 チャット欄に勝手に文字を送信させず、ただ大分公式LINEの画面へ美しく戻します
+      window.location.href = "https://line.me/R/ti/p/%40gof2051l";
     });
   });
 </script>

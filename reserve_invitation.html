@@ -35,7 +35,7 @@
     .checkbox-group input { margin-right: 8px; width: 18px; height: 18px; accent-color: var(--primary-color); }
 
     textarea { height: 100px; resize: none; }
-    .policy-box { background: #f8f8f8; padding: 20px; font-size: 12px; color: #555; line-height: 1.8; border-left: 4px solid #999; margin-bottom: 30px;}
+    .policy-box { background: #f8f8f8; padding: 20px; font-size: 12px; color: #555; line-height: 1.8; border-left: 4px solid #999; margin-bottom: 20px;}
     button { width: 100%; padding: 20px; background: var(--primary-color); color: #ffffff; border: none; font-size: 16px; font-weight: 900; cursor: pointer; letter-spacing: 2px; }
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 94, 122, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
     .modal-content { background: #ffffff; padding: 45px 30px; max-width: 400px; width: 85%; text-align: center; border-top: 4px solid var(--primary-color); }
@@ -128,9 +128,17 @@
   <div class="card" style="box-shadow: none; border: 1px solid #eee;">
     <div class="policy-box">
       <strong>【キャンセルポリシー】</strong><br>
-      ◆ キャンセル、変更につきましては、ご予約日の3日前までにご連絡をお願いいたします。2日前のキャンセルについては50%、当日のキャンセルについては100%のキャンセル料をご請求させていただきます旨ご了承ください。変更等は、お早めにご連絡をお願いいたします。<br><br>
+      ◆ キャンセル、変更につきましては、ご予約日の3日前までにご連絡をお願いいたします。2日前のキャンセルについては50%、当日のキャンセルについては100%のキャンセル料をご請求させていただきます旨ご了承ください。変更等は, お早めにご連絡をお願いいたします。<br><br>
       ◆ ご連絡のないまま、20分を経過してのご来店は、施術時間の短縮、またはお断りをさせていただく場合がございます。その場合も、施術料金の満額をご請求させていただきますので、ご了承ください。
     </div>
+    
+    <div style="margin-bottom: 25px; display: flex; align-items: center; justify-content: center;">
+      <label style="font-size: 14px; font-weight: 900; cursor: pointer; display: flex; align-items: center; color: var(--primary-color);">
+        <input type="checkbox" id="policyCheck" required style="width: 20px; height: 20px; margin-right: 10px; accent-color: var(--primary-color);">
+        キャンセルポリシーに同意する
+      </label>
+    </div>
+    
     <button type="submit">上記に同意してリクエストを送信</button>
   </div>
 </form>
@@ -147,16 +155,14 @@
 </div>
 
 <script>
-  // 🌟 最新の本番用共通URL（...FTFZa7iQ）に更新しました
   const webAppUrl = "https://script.google.com/macros/s/AKfycbyh-FXdvRjPkflNkhhsOnDsbeUsMxz3-DW5vMe7yoBm2JeQ62o5u5TTPVvEN0FTFZa7iQ/exec";
 
-  // 🌟 パラメータに「&area=oita」を渡して、大分のカレンダー設定を直接読み込むように修正しました
   fetch(webAppUrl + "?area=oita")
     .then(response => response.json())
     .then(data => {
       flatpickr(".date-input", {
         locale: "ja", minDate: "today", dateFormat: "Y-m-d",
-        enable: data.oita // 大分の有効化日を適用
+        enable: data.oita 
       });
     }).catch(() => { flatpickr(".date-input", { locale: "ja", minDate: "today", dateFormat: "Y-m-d", enable: [] }); });
 
@@ -186,8 +192,6 @@
     const tel = document.getElementById('resTel').value;
     const count = document.getElementById('resCount').value;
     const menu = document.getElementById('resMenu').value;
-    
-    // 🌟 GASの仕分けロジックに合わせて「area」に小文字の「oita」を完璧にセットします
     const area = "oita";
 
     const d1 = document.getElementById('date1').value, t1 = document.getElementById('time1').value;
